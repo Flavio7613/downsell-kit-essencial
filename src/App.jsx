@@ -2,215 +2,264 @@ import React, { useState, useEffect, useRef } from 'react';
 import './App.css';
 
 function App() {
-  const [timeLeft, setTimeLeft] = useState(480);
+  const [timeLeft, setTimeLeft] = useState(480); // 8 minutes
   const [showSticky, setShowSticky] = useState(false);
-  const [closedSticky, setClosedSticky] = useState(false);
-  const heroRef = useRef(null);
+  const heroPricingRef = useRef(null);
 
+  // Timer logic
   useEffect(() => {
     if (timeLeft <= 0) return;
-    const interval = setInterval(() => setTimeLeft((prev) => prev - 1), 1000);
-    return () => clearInterval(interval);
+    const timer = setInterval(() => {
+      setTimeLeft(prev => prev - 1);
+    }, 1000);
+    return () => clearInterval(timer);
   }, [timeLeft]);
 
+  // Sticky CTA logic
   useEffect(() => {
     const handleScroll = () => {
-      if (closedSticky) return;
-      if (heroRef.current) {
-        const bottom = heroRef.current.getBoundingClientRect().bottom;
-        setShowSticky(bottom < 0);
+      if (heroPricingRef.current) {
+        const pricingPos = heroPricingRef.current.getBoundingClientRect().bottom;
+        setShowSticky(pricingPos < 0);
       }
     };
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [closedSticky]);
+  }, []);
 
+  // Reveal animation on scroll
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          if (entry.isIntersecting) entry.target.classList.add('visible');
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+          }
         });
       },
       { threshold: 0.1 }
     );
+
     document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
     return () => observer.disconnect();
   }, []);
 
-  const formatTime = (s) => {
-    const m = Math.floor(s / 60);
-    const sec = s % 60;
-    return `${m < 10 ? '0' : ''}${m}:${sec < 10 ? '0' : ''}${sec}`;
+  const formatTime = (seconds) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
   };
+
+  const isUrgent = timeLeft < 180; // 3 minutes
 
   return (
     <div className="page-wrapper">
-      {/* Top Scarcity Bar */}
-      <div className="scarcity-bar">
-        ⚠️ Atenção: Esta oferta especial pode desaparecer ao sair da página.
+      {/* 1. Scarcity Top Bar */}
+      <div className="scarcity-top-bar">
+        ⚠️ Oferta disponível apenas nesta página.
       </div>
 
-      <header className="hero section-padding" ref={heroRef}>
+      {/* 2. Hero Section */}
+      <section className="hero">
         <div className="container">
-          <div className="hero-top reveal">
-            <div className="timer-badge">
-              <span>⏳ O DESCONTO EXPIRA EM:</span>
-              <strong className={timeLeft < 180 ? 'urgent' : ''}>{formatTime(timeLeft)}</strong>
+          <div className="hero-header-badges reveal">
+            <div className={`timer-box ${isUrgent ? 'urgent' : ''}`}>
+              <span>⚠️ Desconto expira em</span>
+              <strong>{formatTime(timeLeft)}</strong>
             </div>
-            <div className="off-badge">80% OFF</div>
+            <div className="offer-badge">Oferta Especial</div>
           </div>
-          
-          <h1 className="hero-headline reveal">
-            Espere! Antes de sair, leve o <span>Kit Essencial</span> por apenas <span>R$5,90.</span>
-          </h1>
 
           <div className="hero-grid">
-            <div className="hero-visual reveal">
-              <div className="mockup-container">
-                <div className="mockup-glow"></div>
-                <img 
-                  src="https://i.imgur.com/8C4BoNt.png" 
-                  alt="Kit Essencial para Diabéticos" 
-                  className="main-mockup"
-                />
-                <div className="floating-badge badge-1">🚀 Acesso Imediato</div>
-                <div className="floating-badge badge-2">📄 PDF Digital</div>
-                <div className="floating-badge badge-3">📥 Download Instantâneo</div>
+            <div className="hero-content">
+              <h1 className="hero-headline reveal">
+                Espere! Antes de sair, leve o <span>Kit Essencial</span> por apenas <span>R$5,90.</span>
+              </h1>
+              
+              <p className="hero-subheadline reveal">
+                Uma condição especial foi liberada para você não sair sem uma solução prática para organizar sua alimentação no dia a dia.
+              </p>
+
+              <div className="mockup-area reveal mobile-only">
+                 <img src="https://i.imgur.com/8C4BoNt.png" alt="Mockup Kit" />
+              </div>
+
+              <div className="hero-pricing reveal" ref={heroPricingRef}>
+                <div className="price-container">
+                  <span className="price-old">De R$29,90</span>
+                  <div className="price-new">
+                    Por apenas <strong>R$5,90</strong>
+                  </div>
+                </div>
+
+                <a href="https://pay.kirvano.com/b7760de9-c5b3-4c1c-b341-4d20b1bfee40" target="_blank" rel="noopener noreferrer" style={{textDecoration: 'none'}}>
+                  <button className="main-cta-btn">
+                    SIM! QUERO GARANTIR POR R$5,90
+                  </button>
+                </a>
+
+                <a href="#" className="decline-link">Não, quero perder esta oportunidade</a>
+                <p className="scarcity-micro">Oferta disponível apenas nesta página.</p>
               </div>
             </div>
 
-            <div className="hero-offer">
-              <p className="hero-subheadline reveal">
-                Pare de ficar perdido sem saber o que comer. Garanta agora a versão prática para organizar sua rotina alimentar e evite erros que podem piorar sua saúde.
-              </p>
-              
-              <div className="pricing-box reveal">
-                <div className="price-tag">Oferta liberada apenas agora</div>
-                <div className="price-old">De R$29,90</div>
-                <div className="price-new">Por apenas <strong>R$5,90</strong></div>
-                <button className="cta-btn pulse main-cta">
-                  SIM! QUERO GARANTIR POR R$5,90
-                </button>
-                <div className="decline-link">
-                  <a href="#">Não, quero perder esta oportunidade única</a>
-                </div>
-              </div>
+            <div className="hero-visual reveal desktop-only">
+               <div className="mockup-area">
+                 <img src="https://i.imgur.com/8C4BoNt.png" alt="Mockup Kit" />
+               </div>
             </div>
           </div>
         </div>
-      </header>
+      </section>
 
-      {/* Authority Bar */}
-      <div className="authority-bar reveal">
-        <div className="container bar-content">
-          <span>⚡ Acesso Imediato</span>
-          <span>📚 Material Digital</span>
-          <span>✅ Conteúdo Prático</span>
-          <span>🎯 Fácil de Aplicar</span>
-        </div>
-      </div>
-
-      {/* Transformation Section */}
-      <section className="transformation section-padding">
+      {/* 3. Emotional Section */}
+      <section className="section-padding reveal">
         <div className="container">
-          <h2 className="section-title reveal">Como esse kit ajuda no seu dia a dia</h2>
+          <div className="emotional-box">
+            <h2 className="section-title">Você não precisa sair de mãos vazias</h2>
+            <p>
+              Essa oferta foi liberada apenas porque você chegou até aqui. 
+              Depois que sair desta página, essa condição pode não aparecer novamente. 
+              Por apenas R$5,90, você leva um kit prático para facilitar sua rotina alimentar.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* 4. Deliverables Section */}
+      <section className="section-padding reveal">
+        <div className="container">
+          <h2 className="section-title">Veja tudo que vai receber agora</h2>
           <div className="feature-grid">
             <div className="feature-card reveal">
-              <div className="icon">🛒</div>
-              <h3>Ajuda no mercado</h3>
-              <p>Saiba exatamente o que comprar e evite gastos desnecessários com itens que não ajudam sua saúde.</p>
+              <div className="feature-icon">📅</div>
+              <div className="feature-info">
+                <h3>Mini cardápio semanal</h3>
+                <p>Planejamento pronto para você não ter que pensar no que comer.</p>
+              </div>
             </div>
             <div className="feature-card reveal">
-              <div className="icon">🥗</div>
-              <h3>Ajuda nas refeições</h3>
-              <p>Sugestões práticas e rápidas para você não precisar gastar horas na cozinha.</p>
+              <div className="feature-icon">🛒</div>
+              <div className="feature-info">
+                <h3>Lista de compras inteligente</h3>
+                <p>Compre apenas o necessário e economize no mercado.</p>
+              </div>
             </div>
             <div className="feature-card reveal">
-              <div className="icon">🛑</div>
-              <h3>Reduz escolhas impulsivas</h3>
-              <p>Com tudo planejado, você evita comer o que não deve por falta de opção.</p>
+              <div className="feature-icon">🔄</div>
+              <div className="feature-info">
+                <h3>Guia de substituições</h3>
+                <p>Aprenda a trocar ingredientes sem perder o sabor.</p>
+              </div>
             </div>
             <div className="feature-card reveal">
-              <div className="icon">⏱️</div>
-              <h3>Facilita rotina alimentar</h3>
-              <p>Otimize seu tempo com um guia focado no que realmente funciona para o seu controle.</p>
+              <div className="feature-icon">📖</div>
+              <div className="feature-info">
+                <h3>30 Receitas rápidas</h3>
+                <p>Pratos práticos e acessíveis para o seu dia a dia.</p>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Testimonials */}
-      <section className="testimonials section-padding">
+      {/* 5. Perceived Value Section */}
+      <section className="value-section reveal">
         <div className="container">
-          <h2 className="section-title reveal">O que estão dizendo</h2>
+          <div className="value-box">
+            <span className="total-value">Valor total: R$35,60</span>
+            <div className="today-value">
+              Hoje por apenas
+              <strong>R$5,90</strong>
+            </div>
+            <div className="savings-badge">ECONOMIA DE MAIS DE 80%</div>
+          </div>
+        </div>
+      </section>
+
+      {/* 6. Why it's worth it Section */}
+      <section className="section-padding reveal">
+        <div className="container">
+          <h2 className="section-title">Por que esse kit vale a pena?</h2>
+          <div className="feature-grid">
+            <div className="feature-card reveal">
+              <div className="feature-icon">✅</div>
+              <div className="feature-info">
+                <h3>Organiza sua semana</h3>
+                <p>Tenha clareza total sobre sua alimentação diária.</p>
+              </div>
+            </div>
+            <div className="feature-card reveal">
+              <div className="feature-icon">✅</div>
+              <div className="feature-info">
+                <h3>Evita ficar perdido</h3>
+                <p>Não perca mais tempo decidindo o que comprar no mercado.</p>
+              </div>
+            </div>
+            <div className="feature-card reveal">
+              <div className="feature-icon">✅</div>
+              <div className="feature-info">
+                <h3>Trocas inteligentes</h3>
+                <p>Ajuda nas escolhas certas para o controle glicêmico.</p>
+              </div>
+            </div>
+            <div className="feature-card reveal">
+              <div className="feature-icon">✅</div>
+              <div className="feature-info">
+                <h3>Acessibilidade</h3>
+                <p>Receitas com ingredientes que você já tem em casa.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 7. Testimonials Section */}
+      <section className="section-padding reveal">
+        <div className="container">
+          <h2 className="section-title">Quem já garantiu aprovou</h2>
           <div className="testimonials-grid">
             <div className="testimonial-card reveal">
-              <div className="user-info">
-                <div className="user-photo"></div>
-                <div>
-                  <h4>Maria Silva</h4>
-                  <div className="stars">⭐⭐⭐⭐⭐</div>
-                </div>
-              </div>
-              <p>"O cardápio facilitou muito minha semana. Por R$5,90 foi o melhor investimento que fiz."</p>
+              <p>"Me ajudou muito a organizar minhas refeições da semana de forma simples."</p>
+              <div className="testimonial-author">Maria S.</div>
             </div>
             <div className="testimonial-card reveal">
-              <div className="user-info">
-                <div className="user-photo"></div>
-                <div>
-                  <h4>João Pedro</h4>
-                  <div className="stars">⭐⭐⭐⭐⭐</div>
-                </div>
-              </div>
-              <p>"As receitas são rápidas de verdade. Finalmente parei de comer sempre a mesma coisa."</p>
+              <p>"Gostei porque é direto ao ponto. Pelo valor de um café, valeu muito a pena."</p>
+              <div className="testimonial-author">José R.</div>
             </div>
             <div className="testimonial-card reveal">
-              <div className="user-info">
-                <div className="user-photo"></div>
-                <div>
-                  <h4>Luciana Ramos</h4>
-                  <div className="stars">⭐⭐⭐⭐⭐</div>
-                </div>
-              </div>
-              <p>"A lista de compras me ajudou a economizar no mercado. Material muito prático e direto."</p>
+              <p>"As receitas são práticas e os ingredientes fáceis de encontrar. Recomendo!"</p>
+              <div className="testimonial-author">Ana P.</div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Benefits List Recap */}
-      <section className="recap-section section-padding">
-        <div className="container">
-          <div className="recap-box reveal">
-            <h2>Esta é sua última chance de economizar.</h2>
-            <p>Você não precisa sair de mãos vazias e continuar cometendo erros na sua alimentação.</p>
-            <ul className="recap-list">
-              <li>✅ Mini cardápio semanal completo</li>
-              <li>✅ Lista de compras inteligente</li>
-              <li>✅ Guia de substituições saudáveis</li>
-              <li>✅ 30 Receitas rápidas e fáceis</li>
-            </ul>
-            <div className="final-price-display">
-              <span className="old">R$29,90</span>
-              <span className="new">R$5,90</span>
-            </div>
-            <button className="cta-btn pulse">QUERO APROVEITAR O DESCONTO</button>
-            <p className="scarcity-note">Essa oferta pode não aparecer novamente ao fechar esta página.</p>
-          </div>
+      {/* 8. Final Scarcity / CTA */}
+      <section className="section-padding reveal" style={{background: 'var(--bg-soft)', paddingBottom: '120px'}}>
+        <div className="container" style={{textAlign: 'center'}}>
+          <h2 className="section-title">Não saia sem uma alternativa simples para começar hoje.</h2>
+          <p style={{marginBottom: '30px', color: 'var(--text-muted)', fontWeight: '500'}}>
+            Esta é uma oportunidade única para você levar o Kit Essencial por um preço simbólico.
+          </p>
+          <a href="https://pay.kirvano.com/b7760de9-c5b3-4c1c-b341-4d20b1bfee40" target="_blank" rel="noopener noreferrer" style={{textDecoration: 'none', maxWidth: '500px', display: 'block', margin: '0 auto'}}>
+            <button className="main-cta-btn">
+              QUERO MEU ACESSO POR R$5,90
+            </button>
+          </a>
+          <p className="scarcity-micro" style={{marginTop: '20px'}}>Oferta disponível apenas agora.</p>
         </div>
       </section>
 
-      {/* Sticky CTA */}
-      <div className={`sticky-footer ${showSticky ? 'active' : ''}`}>
-        <div className="sticky-content">
-          <div className="sticky-timer-box">
-            <span className="time">{formatTime(timeLeft)}</span>
-            <span className="label">OFERTA ATIVA</span>
-          </div>
-          <button className="sticky-cta-btn">GARANTIR POR R$5,90</button>
-          <button className="sticky-close" onClick={() => setClosedSticky(true)}>&times;</button>
+      {/* 9. Sticky CTA */}
+      <div className={`sticky-cta ${showSticky ? 'active' : ''}`}>
+        <div className="sticky-timer">
+          <span className="time">{formatTime(timeLeft)}</span>
+          <span className="label">OFERTA ATIVA</span>
         </div>
+        <a href="https://pay.kirvano.com/b7760de9-c5b3-4c1c-b341-4d20b1bfee40" target="_blank" rel="noopener noreferrer" style={{flex: 1, textDecoration: 'none'}}>
+          <button className="sticky-btn">GARANTIR POR R$5,90</button>
+        </a>
       </div>
     </div>
   );

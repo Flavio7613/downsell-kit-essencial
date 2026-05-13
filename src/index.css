@@ -1,17 +1,35 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&display=swap');
+
 :root {
-  --primary: #ff5f9f;
-  --primary-light: #ffd7e7;
-  --bg-white: #fffafa;
-  --text-dark: #352626;
-  --text-muted: #5c4b4b;
-  --white: #ffffff;
-  --radius: 24px;
-  --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  --shadow: 0 10px 30px rgba(255, 95, 159, 0.1);
-  --shadow-soft: 0 4px 15px rgba(0, 0, 0, 0.05);
+  font-family: 'Outfit', system-ui, -apple-system, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light;
+  color: #1a1a1a;
+  background-color: #ffffff;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-* { margin: 0; padding: 0; box-sizing: border-box; }
-body { font-family: 'Inter', sans-serif; background: var(--bg-white); color: var(--text-dark); line-height: 1.6; }
-.container { width: 100%; max-width: 1100px; margin: 0 auto; padding: 0 24px; }
-.section-padding { padding: 60px 0; }
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  background-color: #ffffff;
+}
+
+.container {
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
