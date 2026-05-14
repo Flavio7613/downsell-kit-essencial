@@ -363,7 +363,9 @@
 .mockup-area img {
   width: 100%;
   height: auto;
+  object-fit: contain;
   filter: drop-shadow(0 15px 30px rgba(255, 30, 109, 0.2));
+  display: block;
 }
 
 /* Sticky CTA */
