@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import mockup from './assets/mockup.png';
 import './App.css';
 
 function App() {
@@ -81,20 +82,13 @@ function App() {
               </p>
 
               <div className="mockup-area reveal mobile-only">
-                 <picture>
-                   <source 
-                     srcset="https://images.weserv.nl/?url=i.imgur.com/8C4BoNt.png&w=500&output=webp&q=75" 
-                     type="image/webp" 
-                   />
-                   <img 
-                     src="https://images.weserv.nl/?url=i.imgur.com/8C4BoNt.png&w=500&q=75" 
-                     alt="Kit Essencial para Diabéticos" 
-                     width="500"
-                     height="500"
-                     loading="eager"
-                     style={{ objectFit: 'contain' }}
-                   />
-                 </picture>
+                 <img 
+                   src={mockup} 
+                   alt="Kit Essencial para Diabéticos" 
+                   width="800"
+                   height="800"
+                   loading="eager"
+                 />
               </div>
 
               <div className="hero-pricing reveal" ref={heroPricingRef}>
@@ -118,20 +112,13 @@ function App() {
 
             <div className="hero-visual reveal desktop-only">
                <div className="mockup-area">
-                 <picture>
-                   <source 
-                     srcset="https://images.weserv.nl/?url=i.imgur.com/8C4BoNt.png&w=800&output=webp&q=80" 
-                     type="image/webp" 
-                   />
-                   <img 
-                     src="https://images.weserv.nl/?url=i.imgur.com/8C4BoNt.png&w=800&q=80" 
-                     alt="Kit Essencial para Diabéticos" 
-                     width="800"
-                     height="800"
-                     loading="eager"
-                     style={{ objectFit: 'contain' }}
-                   />
-                 </picture>
+                 <img 
+                   src={mockup} 
+                   alt="Kit Essencial para Diabéticos" 
+                   width="800"
+                   height="800"
+                   loading="eager"
+                 />
                </div>
             </div>
           </div>
