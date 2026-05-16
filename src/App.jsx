@@ -99,7 +99,11 @@ function App() {
                   </div>
                 </div>
 
-                <a href="https://pay.kirvano.com/424550e5-87f4-4a81-94a2-07a4c0dd979f" target="_self" rel="noopener noreferrer" style={{textDecoration: 'none'}}>
+                <a href="https://pay.kirvano.com/424550e5-87f4-4a81-94a2-07a4c0dd979f"
+                 target="_self" 
+                 rel="noopener noreferrer" 
+                 style={{textDecoration: 'none'}}
+                 onClick={() => fbq('track', 'InitiateCheckout')}>
                   <button className="main-cta-btn">
                     SIM! QUERO GARANTIR POR R$5,90
                   </button>
@@ -255,7 +259,11 @@ function App() {
           <p style={{marginBottom: '30px', color: 'var(--text-muted)', fontWeight: '500'}}>
             Esta é uma oportunidade única para você levar o Kit Essencial por um preço simbólico.
           </p>
-          <a href="https://pay.kirvano.com/424550e5-87f4-4a81-94a2-07a4c0dd979f" target="_self" rel="noopener noreferrer" style={{textDecoration: 'none', maxWidth: '500px', display: 'block', margin: '0 auto'}}>
+          <a href="https://pay.kirvano.com/424550e5-87f4-4a81-94a2-07a4c0dd979f" 
+          target="_self" 
+          rel="noopener noreferrer" 
+          style={{textDecoration: 'none', maxWidth: '500px', display: 'block', margin: '0 auto'}}
+          onClick={() => fbq('track', 'InitiateCheckout')}>
             <button className="main-cta-btn">
               QUERO MEU ACESSO POR R$5,90
             </button>
