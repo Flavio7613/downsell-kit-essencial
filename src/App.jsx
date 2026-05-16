@@ -278,7 +278,11 @@ function App() {
           <span className="time">{formatTime(timeLeft)}</span>
           <span className="label">OFERTA ATIVA</span>
         </div>
-        <a href="https://pay.kirvano.com/424550e5-87f4-4a81-94a2-07a4c0dd979f" target="_self" rel="noopener noreferrer" style={{flex: 1, textDecoration: 'none'}}>
+        <a href="https://pay.kirvano.com/424550e5-87f4-4a81-94a2-07a4c0dd979f" 
+        target="_self" 
+        rel="noopener noreferrer" 
+        style={{flex: 1, textDecoration: 'none'}}
+        onClick={() => fbq('track', 'InitiateCheckout')}>
           <button className="sticky-btn">GARANTIR POR R$5,90</button>
         </a>
       </div>
